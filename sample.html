@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BYOS Ecommerce</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; display: flex; flex-direction: column; height: 100vh; }
+    header { background: #333; color: #fff; padding: 1rem; position: sticky; top: 0; z-index: 10; }
+    .container { display: flex; flex: 1; overflow: hidden; }
+    .sidebar { width: 200px; background: #f4f4f4; padding: 1rem; overflow-y: auto; }
+    .sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .sidebar li { margin-bottom: 0.5rem; cursor: pointer; }
+    .sidebar ul ul { display: none; margin-left: 1rem; padding-left: 0; }
+    .sidebar li.active > ul { display: block; }
+    .main { flex: 1; padding: 1rem; overflow-y: auto; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .product { border: 1px solid #ddd; padding: 0.5rem; text-align: center; }
+    .product img { width: 5em; height: 5em; object-fit: cover; background: #ccc; }
+    .load-more { text-align: center; margin: 1rem 0; }
+    .load-more button { padding: 0.5rem 1rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header><h1>BYOS</h1></header>
+  <div class="container">
+    <aside class="sidebar">
+      <ul>
+        <li onclick="toggle(this)">Categories
+          <ul>
+            <li>Men</li>
+            <li>Women</li>
+            <li>Children</li>
+            <li>Home</li>
+            <li>Office</li>
+            <li>Sports</li>
+          </ul>
+        </li>
+      </ul>
+    </aside>
+    <main class="main">
+      <div class="grid" id="product-grid"></div>
+      <div class="load-more">
+        <button id="loadMoreBtn">Load More</button>
+      </div>
+    </main>
+  </div>
+  <script>
+    let loadedCount = 0;
+    function generateProducts(count) {
+      const items = [];
+      for (let i = 1; i <= count; i++) {
+        const id = loadedCount + i;
+        items.push({
+          name: `Product ${id}`,
+          price: `${(Math.random() * 900 + 100).toFixed(0)} INR`,
+          image: 'https://via.placeholder.com/80'
+        });
+      }
+      loadedCount += count;
+      return items;
+    }
+    function renderProducts(products) {
+      const grid = document.getElementById('product-grid');
+      products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product';
+        card.innerHTML = `
+          <img src="${p.image}" alt="${p.name}">
+          <div>${p.name}</div>
+          <div>${p.price}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+    function loadMore() {
+      const newItems = generateProducts(20);
+      renderProducts(newItems);
+    }
+    document.getElementById('loadMoreBtn').addEventListener('click', loadMore);
+    // Initial load of 20 products (4 columns x 5 rows)
+    loadMore();
+    function toggle(el) {
+      el.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
